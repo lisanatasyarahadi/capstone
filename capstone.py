@@ -5,7 +5,7 @@
 #import tkinter as TK
 import pandas as pd
 import streamlit as st
-from matplotlib import pyplot as plt
+from matplotlib as plt
 #import numpy as np
 #import seaborn as sns
 #import plotly.express as px
