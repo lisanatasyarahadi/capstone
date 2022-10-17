@@ -11,7 +11,7 @@ gdp = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDf
 rank = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDfrGOupoOpxYxredNvgyib2zi6JZMAHY1mEaA1_dzw3cHA3btPT3W99QBjMmkoErvYKm/pub?gid=1769985896&single=true&output=csv")
 
 st.title("PISA SEBAGAI INDIKATOR CAPAIAN PENDIDIKAN")
-st.image("PISA news post.png")
+#st.image("PISA news post.png")
 st.write("Nilai PISA menjadi topik hangat dalam dunia pendidikan dewasa ini. Terutama karena PISA 2021; yang seharusnya dilaksanakan tahun lalu dan tertunda karena pandemi; baru saja dilaksanakan pada tahun ini. Berkaca pada perolehan periode sebelumnya, bagaimanakah capaian Indonesia pada tahun ini? Sembari menantikan hasil yang nantinya akan dirilis oleh OECD ada baiknya kita melihat terlebih dahulu apa sebenarnya Tes PISA dan bagaimana hasil dari periode sebelumnya.")
 
 st.header("Apa itu PISA Test?")
