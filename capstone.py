@@ -3,7 +3,7 @@
 #from email.policy import default
 #from turtle import color, title
 #import tkinter as TK
-pip install requirement.txt
+pip install --requirement.txt
 
 import pandas as pd
 import streamlit as st
