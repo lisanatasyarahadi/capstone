@@ -3,6 +3,8 @@
 #from email.policy import default
 #from turtle import color, title
 #import tkinter as TK
+py -m pip freeze > requirements.txt
+py -m pip install -r requirements.txt
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
