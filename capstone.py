@@ -1,7 +1,7 @@
-#from cProfile import label
-#from ctypes.wintypes import SIZE
-#from email.policy import default
-#from turtle import color, title
+from cProfile import label
+from ctypes.wintypes import SIZE
+from email.policy import default
+from turtle import color, title
 #import tkinter as TK
 pip install --requirement.txt
 
