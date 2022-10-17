@@ -1,8 +1,8 @@
 from cProfile import label
 from ctypes.wintypes import SIZE
 from email.policy import default
-from turtle import color, title
-import tkinter as TK
+#from turtle import color, title
+#import tkinter as TK
 import pandas as pd
 import streamlit as st
 from matplotlib import pyplot as plt
