@@ -1,8 +1,13 @@
+from cProfile import label
+from ctypes.wintypes import SIZE
+from email.policy import default
+from turtle import color, title
 import pandas as pd
 import streamlit as st
-#import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 #import numpy as np
 #import seaborn as sns
+#import plotly.express as px
 
 st.set_page_config(layout="wide")
 
@@ -25,11 +30,30 @@ st.dataframe(df)
 
 st.write("""#Nilai PISA dan GDP""")
 
-st.bar_chart(
-    data = gdp,
-    x = 'Country Name',
-    y = st.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science", "GDP 2018"]))
+#st.bar_chart(
+    #data = gdp,
+    #x = 'Country Name',
+    #y = st.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science", "GDP 2018"]))
 
+#plotdata = gdp.plot(kind="barh")
+#plt.title("Nilai PISA dan GDP")
+#plt.ylabel("Country Name")
+#plt.xlabel("Mean Math")
+#st.pyplot(plotdata)
+
+pilih = st.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science"])
+
+pisa_sorted = df.sort_values(pilih)
+fig, ax = plt.subplots(figsize = (3, 12))
+ax.barh(pisa_sorted["Country Name"], pisa_sorted[pilih], color="Blue", height = 0.5)
+ax.set_title("Nilai PISA")
+ax.set_xlabel(pilih)
+ax.set_ylabel("Nama Negara")
+st.pyplot(fig)
+
+fig2, ax = plt.subplots()
+ax.scatter(gdp[pilih], gdp["GDP 2018"])
+st.pyplot(fig2)
 #st.pyplot(plt.scatter(
     #data=gdp_2,
     #x='Country Name',
