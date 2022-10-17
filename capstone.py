@@ -1,15 +1,14 @@
+from operator import index
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 #import numpy as np
-#import seaborn as sns
-#import plotly.express as px
 
 st.set_page_config(layout="wide")
 
 df = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDfrGOupoOpxYxredNvgyib2zi6JZMAHY1mEaA1_dzw3cHA3btPT3W99QBjMmkoErvYKm/pub?gid=0&single=true&output=csv")
 gdp = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDfrGOupoOpxYxredNvgyib2zi6JZMAHY1mEaA1_dzw3cHA3btPT3W99QBjMmkoErvYKm/pub?gid=541891748&single=true&output=csv")
-#gdp_2 = pd.read_csv("PISA GDP 2018 - Copy.csv")
+rank = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDfrGOupoOpxYxredNvgyib2zi6JZMAHY1mEaA1_dzw3cHA3btPT3W99QBjMmkoErvYKm/pub?gid=1769985896&single=true&output=csv")
 
 st.title("PISA SEBAGAI INDIKATOR CAPAIAN PENDIDIKAN")
 st.write("Nilai PISA menjadi topik hangat dalam dunia pendidikan dewasa ini. Terutama karena PISA 2021 yang seharusnya dilaksanakan tahun lalu dan tertunda karena pandemi baru saja dilaksanakan pada tahun ini. Berkaca pada perolehan periode sebelumnya, bagaimanakah capaian Indonesia pada tahun ini? Sembari menantikan hasil yang nantinya akan dirilis oleh OECD ada baiknya kita melihat terlebih dahulu apa sebenarnya Tes PISA dan bagaimana hasil dari periode sebelumnya.")
@@ -21,21 +20,8 @@ st.write("PISA unik karena: • orientasi kebijakan, yang menghubungkan data has
 
 st.write("""#Tabel Nilai PISA""")
 st.dataframe(df)
-#st.dataframe(gdp)
-#st.dataframe(gdp_2)
 
 st.write("""#Nilai PISA dan GDP""")
-
-#st.bar_chart(
-    #data = gdp,
-    #x = 'Country Name',
-    #y = st.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science", "GDP 2018"]))
-
-#plotdata = gdp.plot(kind="barh")
-#plt.title("Nilai PISA dan GDP")
-#plt.ylabel("Country Name")
-#plt.xlabel("Mean Math")
-#st.pyplot(plotdata)
 
 pilih = st.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science"])
 
@@ -50,10 +36,16 @@ st.pyplot(fig)
 fig2, ax = plt.subplots()
 ax.scatter(gdp[pilih], gdp["GDP 2018"])
 st.pyplot(fig2)
-#st.pyplot(plt.scatter(
-    #data=gdp_2,
-    #x='Country Name',
-    #y='Mean Reading')
-#)
+
+pilih_negara = st.selectbox("Pilih Negara", rank["Country Name"])
+pisa_reading = pd.DataFrame(rank,
+                            columns=["Country Name", "Mean Reading 2012", "Mean Reading 2015", "Mean Reading 2018"])
+st.dataframe(pisa_reading.set_index("Country Name"))
+pilih_negara_2 = pisa_reading.loc[pisa_reading["Country Name"] == pilih_negara]
+pilih_negara_a = pilih_negara_2.set_index("Country Name")
+st.dataframe(pilih_negara_a)
+pilih_negara_3 = pilih_negara_a.transpose()
+st.dataframe(pilih_negara_3)
+st.line_chart(pilih_negara_3)
 
 st.caption("Data diambil dari https://www.oecd.org/pisa/")
