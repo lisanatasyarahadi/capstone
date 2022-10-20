@@ -2,7 +2,7 @@ from operator import index
 import pandas as pd
 import streamlit as st
 from matplotlib import pyplot as plt
-#import numpy as np
+import numpy as np
 
 st.set_page_config(layout="wide")
 
@@ -28,31 +28,37 @@ st.write("Menjadi salah satu tolak ukur untuk menilai seberapa baik kualitas pen
 
 pilih = st.sidebar.selectbox("Pilih Nilai", ["Mean Reading", "Mean Math", "Mean Science"])
 
+
 col1, col2 = st.columns(2)
 
 with col1:
     st.write("""#Nilai PISA 2018 Berdasarkan Ranking""")
     pisa_sorted = df.sort_values(pilih)
-    fig, ax = plt.subplots(figsize = (3, 12))
-    ax.barh(pisa_sorted["Country Name"], pisa_sorted[pilih], color="Orange", height = 0.5)
-    ax.set_title("Nilai PISA")
+    top_ten = pisa_sorted.loc[10:1]
+    fig, ax = plt.subplots(figsize=(2.5,2.7))
+    ax.barh(top_ten["Country Name"], top_ten[pilih], color="navy", height = 0.6)
+    ax.set_title("Nilai PISA 10 Teratas")
     ax.set_xlabel(pilih)
     ax.set_ylabel("Nama Negara")
     st.pyplot(fig)
 
 with col2:
     st.write("""#Nilai PISA dan GDP per Kapita""")
-    fig2, ax = plt.subplots()
-    ax.scatter(gdp[pilih], gdp["GDP 2018"])
+    fig2, ax = plt.subplots(figsize=(4,3.5))
+    ax.scatter(gdp[pilih], gdp["GDP 2018"], color="royalblue")
+    ax.set_xlabel(pilih)
+    ax.set_ylabel("GDP per Kapita")
     st.pyplot(fig2)
-    st.write("Memperhatikan hasil dari PISA 2018, terlihat bahwa untuk semua mata pelajaran yang diujikan, posisi teratas diduduki oleh negara Asia seperti Singapura, China, dan juga Jepang. Posisi selanjutnya kemudian diikuti negara bagian Amerika dan juga Eropa.")
-    st.write("Selain daripada capaian nilai secara ranking, nilai PISA juga terkait dengan kondisi ekonomi suatu negara. Oleh karena OECD sendiri mengukur kemampuan siswa untuk hidup di masyarakat secara sosial ekonomi, kaitan perolehan nilai PISA dan kondisi ekonomi menjadi hal yang menarik untuk dipelajari lebih lanjut. Berdasarkan scatter plot terlihat bahwa ada hubungan antara nilai PISA dan juga GDP per kapita. Jika memperhatikan negara-negara yang menempati posisi teratas, sebagian besar didominasi oleh negara maju dengan perekonomian yang baik.")
+
+st.write("Memperhatikan hasil dari PISA 2018, terlihat bahwa untuk semua mata pelajaran yang diujikan, posisi teratas diduduki oleh negara Asia seperti Singapura, China, dan juga Jepang. Posisi selanjutnya kemudian diikuti negara bagian Amerika dan juga Eropa.")
+st.write("Selain daripada capaian nilai secara ranking, nilai PISA juga terkait dengan kondisi ekonomi suatu negara. Oleh karena OECD sendiri mengukur kemampuan siswa untuk hidup di masyarakat secara sosial ekonomi, kaitan perolehan nilai PISA dan kondisi ekonomi menjadi hal yang menarik untuk dipelajari lebih lanjut. Berdasarkan scatter plot terlihat bahwa ada hubungan antara nilai PISA dan juga GDP per kapita. Jika memperhatikan negara-negara yang menempati posisi teratas, sebagian besar didominasi oleh negara maju dengan perekonomian yang baik.")
 
 st.subheader("Perolehan Nilai PISA 2012-2018")
 st.write("Di bawan ini disajikan data nilai PISA selama 3 periode terakhir. Oleh karena PISA diadakan setiap 3 tahun sekali. Berikut adalah perolehan nilai PISA 2012, 2015, dan 2018.")
 
 pilih_negara = st.selectbox("Pilih Negara", rank["Country Name"])
 st.write("#Perolehan Nilai PISA 2012-2018", pilih_negara)
+
 tab1, tab2, tab3 = st.tabs(["Nilai Mean Reading", "Nilai Mean Math", "Nilai Mean Science"])
 
 with tab1:
@@ -90,53 +96,420 @@ asean = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeyp
 OECD = pd.read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQRU6kwdeypDfrGOupoOpxYxredNvgyib2zi6JZMAHY1mEaA1_dzw3cHA3btPT3W99QBjMmkoErvYKm/pub?gid=1583958311&single=true&output=csv")
 
 st.write("Berikut adalah nilai capaian PISA Indonesia dibandingkan dengan rata-rata OECD dan juga negara tetangga")
-col9, col10 = st.columns(2)
+col9, col10, col11 = st.columns(3)
 
 with col9:
-    st.write("#Capaian PISA Indonesia dibandingkan OECD")
-    OECD_sorted = pd.DataFrame(OECD, columns=["Country Name", "Mean Reading 2018", "Mean Math 2018", "Mean Science 2018"])
-    st.bar_chart(OECD_sorted.set_index("Country Name"))
+    st.write("#Nilai PISA: Reading")
+    OECD_sorted = pd.DataFrame(OECD, columns=["Country Name", "Mean Reading 2012", "Mean Reading 2015", "Mean Reading 2018"])
+    OECD_trans = OECD_sorted.set_index("Country Name")
+    st.line_chart(OECD_trans.transpose())
 
 with col10:
-    st.write("Indonesia pada tahun 2018 sendiri mendapatkan peringkat 72 dari 79 untuk Reading, 72 dari 79 untuk Math, dan 71 dari 79 untuk Science.")
-    st.write("Hasil ini tentunya masih berada jauh di bawah rata-rata OECD dan menunjukkan capaian yang rendah untuk ketiga bidang.")
+    st.write("#Nilai PISA Math")
+    OECD_sorted = pd.DataFrame(OECD, columns=["Country Name", "Mean Math 2012", "Mean Math 2015", "Mean Math 2018"])
+    OECD_trans = OECD_sorted.set_index("Country Name")
+    st.line_chart(OECD_trans.transpose())
+    
+with col11:
+    st.write("#Nilai PISA Science")
+    OECD_sorted = pd.DataFrame(OECD, columns=["Country Name", "Mean Science 2012", "Mean Science 2015", "Mean Science 2018"])
+    OECD_trans = OECD_sorted.set_index("Country Name")
+    st.line_chart(OECD_trans.transpose())
 
-tab4, tab5, tab6 =st.tabs(["Tahun 2018", "Tahun 2015", "Tahun 2012"])
+st.write("Indonesia pada tahun 2018 sendiri mendapatkan peringkat 72 dari 79 untuk Reading, 72 dari 79 untuk Math, dan 71 dari 79 untuk Science. Pencapaian ini dapat dikatakan belum cukup baik. Mengingat nilai PISA menunjukkan kualitas pendidikan suatu negara maka nilai PISA Indonesia memperlihatkan kualitas pendidikan yang masih rendah.")
+st.write("Pencapaian Indonesia selama 3 periode juga masih berada jauh di bawah rata-rata OECD dan menunjukkan capaian yang rendah untuk ketiga bidang. Dari hasil yang didapatkan selama 3 periode tidak ada perubahan signifikan bahkan cenderung menurun untuk keterampilan membaca (reading)")
+
+tab4, tab5, tab6 =st.tabs(["Nilai Reading", "Nilai Math", "Nilai Science"])
 
 with tab4:
     col3, col4 = st.columns(2)
     with col3:
-        st.write("""#Nilai PISA 2018 Negara Asean""")
-        asean_sorted = pd.DataFrame(asean, columns=["Country Name", "Mean Reading 2018", "Mean Math 2018", "Mean Science 2018"])
-        st.bar_chart(asean_sorted.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("fivethirtyeight")
+        #create the base axis to add the bars to
+        fig3, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                       asean["Mean Reading 2012"],
+                       width = width,
+                       label = "2012",
+                       edgecolor = "black")
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                       asean["Mean Reading 2015"],
+                       width = width,
+                       label = "2015",
+                       edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                       asean["Mean Reading 2018"],
+                       width = width,
+                       label = "2018",
+                       edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Rata-rata Nilai",
+                      fontsize = 10,
+                      labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                      fontsize = 10,
+                      labelpad =20)
+        ax.set_title("Nilai PISA ASEAN 2012-2018: Reading",
+                     fontsize = 12,
+                     pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                  fontsize = 10,
+                  title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                       which = "both",
+                       labelsize = 10,
+                       labelrotation = 45)
+        ax.tick_params(axis = "y",
+                       which = "both",
+                       labelsize = 10)
+
+        st.pyplot(fig3)
         
     with col4:
-        st.write("""#Ranking PISA 2018 Negara Asean""")
-        asean_sorted_2 = pd.DataFrame(asean, columns=["Country Name", "Posisi Reading 2018", "Posisi Math 2018", "Posisi Science 2018"])
-        st.line_chart(asean_sorted_2.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("seaborn-pastel")
+        #create the base axis to add the bars to
+        fig6, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                       asean["Posisi Reading 2012"],
+                       width = width,
+                       label = "2012",
+                       edgecolor = "black")
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                       asean["Posisi Reading 2015"],
+                       width = width,
+                       label = "2015",
+                       edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                       asean["Posisi Reading 2018"],
+                       width = width,
+                       label = "2018",
+                       edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Posisi Ranking",
+                      fontsize = 10,
+                      labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                      fontsize = 10,
+                      labelpad =20)
+        ax.set_title("Ranking PISA ASEAN 2012-2018: Reading",
+                     fontsize = 12,
+                     pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                  fontsize = 10,
+                  title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                       which = "both",
+                       labelsize = 10,
+                       labelrotation = 45)
+        ax.tick_params(axis = "y",
+                       which = "both",
+                       labelsize = 10)
+        st.pyplot(fig6)
         
 with tab5:
     col5, col6 = st.columns(2)
     with col5:
-        st.write("""#Nilai PISA 2015 Negara Asean""")
-        asean_sorted_2015 = pd.DataFrame(asean, columns=["Country Name", "Mean Reading 2015", "Mean Math 2015", "Mean Science 2015"])
-        st.bar_chart(asean_sorted_2015.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("fivethirtyeight")
+        #create the base axis to add the bars to
+        fig4, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                       asean["Mean Math 2012"],
+                       width = width,
+                       label = "2012",
+                       edgecolor = "black")
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                       asean["Mean Math 2015"],
+                       width = width,
+                       label = "2015",
+                       edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                       asean["Mean Math 2018"],
+                       width = width,
+                       label = "2018",
+                       edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Rata-rata Nilai",
+                      fontsize = 10,
+                      labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                      fontsize = 10,
+                      labelpad =20)
+        ax.set_title("Nilai PISA ASEAN 2012-2018: Math",
+                     fontsize = 12,
+                     pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                  fontsize = 10,
+                  title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                       which = "both",
+                       labelsize = 10,
+                       labelrotation = 45)
+        ax.tick_params(axis = "y",
+                       which = "both",
+                       labelsize = 10)
+
+        st.pyplot(fig4)
         
     with col6:
-        st.write("""#Ranking PISA 2015 Negara Asean""")
-        asean_sorted_2015_2 = pd.DataFrame(asean, columns=["Country Name", "Posisi Reading 2015", "Posisi Math 2015", "Posisi Science 2015"])
-        st.line_chart(asean_sorted_2015_2.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("seaborn-pastel")
+        #create the base axis to add the bars to
+        fig6, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                       asean["Posisi Math 2012"],
+                       width = width,
+                       label = "2012",
+                       edgecolor = "black")
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                       asean["Posisi Math 2015"],
+                       width = width,
+                       label = "2015",
+                       edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                       asean["Posisi Math 2018"],
+                       width = width,
+                       label = "2018",
+                       edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Posisi Ranking",
+                      fontsize = 10,
+                      labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                      fontsize = 10,
+                      labelpad =20)
+        ax.set_title("Ranking PISA ASEAN 2012-2018: Math",
+                     fontsize = 12,
+                     pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                  fontsize = 10,
+                  title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                       which = "both",
+                       labelsize = 10,
+                       labelrotation = 45)
+        ax.tick_params(axis = "y",
+                       which = "both",
+                       labelsize = 10)
+
+        st.pyplot(fig6)
         
 with tab6:
     col7, col8 = st.columns(2)
     with col7:
-        st.write("""#Nilai PISA 2012 Negara Asean""")
-        asean_sorted_2012 = pd.DataFrame(asean, columns=["Country Name", "Mean Reading 2012", "Mean Math 2012", "Mean Science 2012"])
-        st.bar_chart(asean_sorted_2012.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("fivethirtyeight")
+        #create the base axis to add the bars to
+        fig5, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                    asean["Mean Science 2012"],
+                    width = width, 
+                    label = "2012",
+                    edgecolor = "black"
+                    )
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                    asean["Mean Science 2015"],
+                    width = width,
+                    label = "2015",
+                    edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                    asean["Mean Science 2018"],
+                    width = width,
+                    label = "2018",
+                    edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Rata-rata Nilai",
+                    fontsize = 10,
+                    labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                    fontsize = 10,
+                    labelpad =20)
+        ax.set_title("Nilai PISA ASEAN 2012-2018: Science",
+                    fontsize = 12,
+                    pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                fontsize = 10,
+                title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                    which = "both",
+                    labelsize = 10,
+                    labelrotation = 45)
+        ax.tick_params(axis = "y",
+                    which = "both",
+                    labelsize = 10)
+        st.pyplot(fig5)
         
     with col8:
-        st.write("""#Ranking PISA 2012 Negara Asean""")
-        asean_sorted_2012_2 = pd.DataFrame(asean, columns=["Country Name", "Posisi Reading 2012", "Posisi Math 2012", "Posisi Science 2012"])
-        st.line_chart(asean_sorted_2012_2.set_index("Country Name"))
+        #use fivethirty eights style of plots
+        plt.style.use("seaborn-pastel")
+        #create the base axis to add the bars to
+        fig6, ax = plt.subplots(1,1)
+        #extract the labels
+        label = asean["Country Name"]
+        #use this to create x ticks to add the data to
+        x = np.arange(len(label))
+        #set a width for each bar 
+        width = 0.2
+        #create out first bar
+        #set it so that x will be the centre of the bars
+        #so that we can add our labels later
+        #so set the centre of the first to be 1/2 width away
+        #to the left
+        rect1 = ax.bar(x - width/2,
+                       asean["Posisi Science 2012"],
+                       width = width,
+                       label = "2012",
+                       edgecolor = "black")
+        #create the second bar
+        #with a centre half a width to the right
+        rect2 = ax.bar(x + width/2,
+                       asean["Posisi Science 2015"],
+                       width = width,
+                       label = "2015",
+                       edgecolor = "black")
+        #create the third bar
+        #with a centre a width to the right
+        rect3 = ax.bar(x + width*3/2,
+                       asean["Posisi Science 2018"],
+                       width = width,
+                       label = "2018",
+                       edgecolor = "black")
+        #add the labels to the axis
+        ax.set_ylabel("Posisi Ranking",
+                      fontsize = 10,
+                      labelpad = 20)
+        ax.set_xlabel("Nama Negara",
+                      fontsize = 10,
+                      labelpad =20)
+        ax.set_title("Ranking PISA ASEAN 2012-2018: Science",
+                     fontsize = 12,
+                     pad = 20)
+        #set the ticks
+        ax.set_xticks(x)
+        ax.set_xticklabels(label)
+        #add the legend
+        #using the labels of the bars
+        ax.legend(title = "Year of Test",
+                  fontsize = 10,
+                  title_fontsize = 10)
+        #adjust the tick paramaters
+        ax.tick_params(axis = "x",
+                       which = "both",
+                       labelsize = 10,
+                       labelrotation = 45)
+        ax.tick_params(axis = "y",
+                       which = "both",
+                       labelsize = 10)
+        st.pyplot(fig6)
 
+st.write("Dibandingkan dengan negara tetangga, capaian Indonesia juga belum cukup baik. Indonesia mendapatkan peringkat kedua terbawah untuk negara ASEAN yang mengikuti Test PISA pada ketiga bidang.")
+st.write("Perolehan yang belum maksimal ini tentunya perlu disikapi dengan bijaksana. Pemerintah beserta seluruh Instansi Pendidikan perlu melakukan transformasi sistem pendidikan yang signifikan untuk bisa meningkatkan kualitas pendidikan dan tentunya meningkatkan kualitas peserta didik. Oleh karena PISA mengukur kemampuan siswa dalam kehidupan bermasyarakat, bercermin pada nilai yang didapatkan Indonesia tentu kita perlu untuk membuat pembelajaran di dalam kelas menjadi lebih realistis dan dapat diaplikasikan dalam konteks bermasyarakat. Kemampuan siswa dalam literasi dan numerasi juga perlu untuk diperhatikan.")
+st.write("Dengan meningkatkan kualitas pendidikan diharapkan bahwa bidang lain juga boleh meningkat oleh karena kualitas SDM yang lebih baik. Pemerintah terlihat sudah melakukan upaya perubahan terhadap sistem pendidikan. Semoga usaha ini dapat berjalan secara konsisten dan memberikan hasil yang salah satunya bisa dilihat pada periode Tes PISA mendatang.")
 st.caption("Data diambil dari https://www.oecd.org/pisa/")
